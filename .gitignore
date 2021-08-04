@@ -32,4 +32,4 @@ media/
 static/
 
 #env
-.env/
+.env
