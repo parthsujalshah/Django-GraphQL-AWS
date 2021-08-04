@@ -3,6 +3,9 @@ import graphql_jwt
 from graphql_jwt.decorators import login_required
 from django.contrib.auth.models import User
 from graphene_django import DjangoObjectType
+from django.http import Http404
+from graphql_auth.schema import UserQuery, MeQuery
+from graphql_auth import mutations
 
 
 class UserType(DjangoObjectType):
@@ -22,7 +25,10 @@ class Query(graphene.ObjectType):
         return User.objects.get(username=user)
 
 
-class Mutation(graphene.ObjectType):
-    token_auth = graphql_jwt.ObtainJSONWebToken.Field()
-    verify_token = graphql_jwt.Verify.Field()
-    refresh_token = graphql_jwt.Refresh.Field()
+class AuthMutation(graphene.ObjectType):
+    register = mutations.Register.Field()
+    token_auth = mutations.ObtainJSONWebToken.Field()
+
+
+class Mutation(AuthMutation, graphene.ObjectType):
+    pass

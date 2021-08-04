@@ -48,13 +48,16 @@ INSTALLED_APPS = [
     'post',
 
     'graphene_django',
-    'corsheaders'
+    'graphql_jwt.refresh_token.apps.RefreshTokenConfig',
+    'graphql_auth',
+    'django_filters',
+    # 'corsheaders'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -151,10 +154,23 @@ GRAPHENE = {
 }
 
 AUTHENTICATION_BACKENDS = [
-    "graphql_jwt.backends.JSONWebTokenBackend",
+    'graphql_auth.backends.GraphQLAuthBackend',
+    # "graphql_jwt.backends.JSONWebTokenBackend",
     "django.contrib.auth.backends.ModelBackend",
 ]
 
-CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
+GRAPHQL_JWT = {
+    'JWT_ALLOW_ANY_CLASSES': [
+        'graphql_auth.mutations.Register',
+        # 'graphql_auth.mutations.VerifyAccount',
+        'graphql_auth.mutations.ObtainJSONWebToken',
+    ],
+    'JWT_VERIFY_EXPIRATION': True,
+    'JWT_LONG_RUNNING_REFRESH_TOKEN': True
+}
 
-CORS_ALLOW_CREDENTIALS = True
+# CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
+
+# CORS_ALLOW_CREDENTIALS = True
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
