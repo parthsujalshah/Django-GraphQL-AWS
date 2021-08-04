@@ -15,6 +15,10 @@ class PostType(DjangoObjectType):
 class Query(graphene.ObjectType):
 
     all_posts = graphene.List(PostType)
+    user_posts = graphene.List(PostType)
 
     def resolve_all_posts(root, info):
         return Post.objects.all()
+    def resolve_user_posts(root, info, **kwargs):
+        print(info.context.user)
+        return Post.objects.filter(author=info.context.user)
