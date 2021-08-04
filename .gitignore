@@ -30,3 +30,6 @@ env/
 *.sqlite3
 media/
 static/
+
+#env
+.env/
