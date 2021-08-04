@@ -11,19 +11,26 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import environ
+import os
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+print(BASE_DIR)
+env = environ.Env()
+environ.Env.read_env(env_file=os.path.join(BASE_DIR, ".env"))
+
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-%czm$t(_*$jk(x&)e5xpj-%bzd^j4t6@8g8fd!d+!f+q^plybm'
+SECRET_KEY = env("SECRET_KEY", default='secret-key-of-at-least-50-characters-to-pass-check-deploy')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool("DEBUG", default=True)
 
 ALLOWED_HOSTS = []
 
@@ -74,11 +81,15 @@ WSGI_APPLICATION = 'blog.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        "default": {
+            "ENGINE": env("SQL_ENGINE", default='django.db.backends.postgresql_psycopg2'),
+            "NAME": env("DB_NAME", default="blogggingsite"),
+            "USER": env("DB_USER", default="blogggingsite"),
+            "PASSWORD": env("DB_PASS", default="blogggingsite"),
+            "HOST": env("DB_HOST", default="localhost"),
+            "PORT": env("DB_PORT", default="5432"),
+        }
     }
-}
 
 
 # Password validation
