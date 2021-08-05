@@ -7,6 +7,7 @@ from django.http import Http404
 from graphql_auth.schema import UserQuery, MeQuery
 from graphql_auth import mutations
 from .models import Profile
+from graphene_file_upload.scalars import Upload
 
 
 class UserType(DjangoObjectType):
@@ -50,7 +51,6 @@ class AuthMutation(graphene.ObjectType):
 
 class UpdateProfileMutation(graphene.Mutation):
     class Arguments:
-        # image
         firstname = graphene.String()
         lastname = graphene.String()
 
@@ -66,5 +66,23 @@ class UpdateProfileMutation(graphene.Mutation):
         return UpdateProfileMutation(profile=profile)
 
 
+class ProfilePicUploadMutation(graphene.Mutation):
+    class Arguments:
+        image = Upload(required=True)
+        # image = graphene.String()
+
+    profile = graphene.Field(ProfileType)
+
+    @login_required
+    def mutate(self, info, image, **kwargs):
+        print('here')
+        print(info.context.user)
+        profile = info.context.user.profile
+        profile.image = image
+        profile.save()
+        return ProfilePicUploadMutation(profile=profile)
+
+
 class Mutation(AuthMutation, graphene.ObjectType):
     update_profile = UpdateProfileMutation.Field()
+    profile_pic_upload = ProfilePicUploadMutation.Field()
