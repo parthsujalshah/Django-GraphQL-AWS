@@ -1,9 +1,13 @@
 import React from "react";
 import { Form, Input, Button, Checkbox, Card } from 'antd';
+import {useHistory} from "react-router-dom";
 
 const Register = props => {
+    const history = useHistory();
+
     const onFinish = (values) => {
         console.log('Success:', values);
+        history.push('/');
     };
 
     const onFinishFailed = (errorInfo) => {
