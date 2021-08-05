@@ -1,11 +1,11 @@
 import './App.css';
 import 'antd/dist/antd.css';
-import Profile from "./pages/Profile";
+import LoggedInMenu from "./containers/LoggedInMenu";
 
 function App() {
   return (
     <div style={{alignItems: "center", justifyContent: "center", display: "flex", flex: 1}}>
-      <Profile />
+      <LoggedInMenu />
     </div>
   );
 }
