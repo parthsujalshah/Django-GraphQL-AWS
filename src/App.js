@@ -9,16 +9,26 @@ import LoggedOutMenu from "./containers/LoggedOutMenu";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 function App() {
+
   return (
-    <div style={{ alignItems: "center", justifyContent: "center", display: "flex", flex: 1 }}>
-      <BrowserRouter>
-        <Switch>
-          <Route path="/" exact component={Home} />
-          <Route path="/login" exact component={Login} />
-          <Route path="/profile" exact component={Profile} />
-          <Route path="/register" exact component={Register} />
-        </Switch>
-      </BrowserRouter>
+    <div>
+      {
+        localStorage.getItem('authToken')
+          ?
+          <LoggedInMenu />
+          :
+          <LoggedOutMenu />
+      }
+      <div style={{ alignItems: "center", justifyContent: "center", display: "flex", flex: 1 }}>
+        <BrowserRouter>
+          <Switch>
+            <Route path="/" exact component={Home} />
+            <Route path="/login" exact component={Login} />
+            <Route path="/profile" exact component={Profile} />
+            <Route path="/register" exact component={Register} />
+          </Switch>
+        </BrowserRouter>
+      </div>
     </div>
   );
 }
