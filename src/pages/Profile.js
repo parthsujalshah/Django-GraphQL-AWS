@@ -16,7 +16,7 @@ const Profile = props => {
     const [profilePic, setProfilePic] = useState({
         image: "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
     })
-    const [profileCustom, setProfileCustom] = useState(false);
+    const [editableProfile, setEditableProfile] = useState(false);
     const [posts, setPosts] = useState([
         {
             author: {
@@ -143,22 +143,28 @@ const Profile = props => {
                             <div style={{ marginRight: 20 }} />
                             <h1>{profile.username}</h1>
                         </div>
-                        <Form
-                            name="image"
-                            onFinish={onFinishImage}
-                            initialValues={{}}
-                        >
-                            <Form.Item
-                                name="changeProfilePic"
-                                label="Change Profile Pcture"
-                                valuePropName="fileList"
-                                getValueFromEvent={normFile}
-                            >
-                                <Upload name="logo" action="/upload.do" listType="picture">
-                                    <Button icon={<UploadOutlined />}>Click to upload</Button>
-                                </Upload>
-                            </Form.Item>
-                        </Form>
+                        {
+                            editableProfile ?
+                                <Form
+                                    name="image"
+                                    onFinish={onFinishImage}
+                                    initialValues={{}}
+                                >
+                                    <Form.Item
+                                        name="changeProfilePic"
+                                        label="Change Profile Pcture"
+                                        valuePropName="fileList"
+                                        getValueFromEvent={normFile}
+                                    >
+                                        <Upload name="logo" action="/upload.do" listType="picture">
+                                            <Button icon={<UploadOutlined />}>Click to upload</Button>
+                                        </Upload>
+                                    </Form.Item>
+                                </Form>
+                                :
+                                <div style={{ marginBottom: 10 }} />
+                        }
+
                         <Form
                             name="basic"
                             labelCol={{ span: 8 }}
@@ -171,21 +177,28 @@ const Profile = props => {
                                 label="First Name"
                                 name="firstname"
                             >
-                                <Input defaultValue={profile.profile.firstname} />
+                                <Input defaultValue={profile.profile.firstname} disabled={!editableProfile} />
                             </Form.Item>
 
                             <Form.Item
                                 label="Last Name"
                                 name="lastname"
                             >
-                                <Input defaultValue={profile.profile.lastname} />
+                                <Input defaultValue={profile.profile.lastname} disabled={!editableProfile} />
                             </Form.Item>
 
-                            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                                <Button type="primary" htmlType="submit">
-                                    Update
-                                </Button>
-                            </Form.Item>
+                            {
+                                editableProfile
+                                    ?
+                                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                                        <Button type="primary" htmlType="submit">
+                                            Update
+                                        </Button>
+                                    </Form.Item>
+                                    :
+                                    <div/>
+                            }
+
                         </Form>
                     </Card>
                 </Affix>
