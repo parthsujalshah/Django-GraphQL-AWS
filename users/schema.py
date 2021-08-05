@@ -6,6 +6,7 @@ from graphene_django import DjangoObjectType
 from django.http import Http404
 from graphql_auth.schema import UserQuery, MeQuery
 from graphql_auth import mutations
+from .models import Profile
 
 
 class UserType(DjangoObjectType):
@@ -14,19 +15,31 @@ class UserType(DjangoObjectType):
         fields = '__all__'
 
 
+class ProfileType(DjangoObjectType):
+    class Meta:
+        model = Profile
+        fields = '__all__'
+
+
 class Query(graphene.ObjectType):
 
     user_details = graphene.Field(UserType)
-    all_users = graphene.List(UserType)
+    user_profile = graphene.Field(ProfileType)
 
+    all_users = graphene.List(UserType) #temp
+
+    @login_required
     def resolve_user_details(root, info, **kwargs):
         user = info.context.user
-        if not user.is_authenticated:
-            raise Exception("Unauthenticated")
         return User.objects.get(username=user)
 
+    @login_required
+    def resolve_user_profile(root, info):
+        user = info.context.user
+        return user.profile
+
+    # temp route
     def resolve_all_users(root, info):
-        # temp route
         return User.objects.all()
 
 
@@ -35,5 +48,23 @@ class AuthMutation(graphene.ObjectType):
     token_auth = mutations.ObtainJSONWebToken.Field()
 
 
+class UpdateProfileMutation(graphene.Mutation):
+    class Arguments:
+        # image
+        firstname = graphene.String()
+        lastname = graphene.String()
+
+    profile = graphene.Field(ProfileType)
+
+    @classmethod
+    @login_required
+    def mutate(cls, root, info, firstname, lastname):
+        profile = info.context.user.profile
+        profile.firstname = firstname
+        profile.lastname = lastname
+        profile.save()
+        return UpdateProfileMutation(profile=profile)
+
+
 class Mutation(AuthMutation, graphene.ObjectType):
-    pass
+    update_profile = UpdateProfileMutation.Field()
