@@ -1,11 +1,11 @@
 import './App.css';
 import 'antd/dist/antd.css';
-import Home from "./pages/Home";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
     <div style={{alignItems: "center", justifyContent: "center", display: "flex", flex: 1}}>
-      <Home />
+      <Profile />
     </div>
   );
 }
