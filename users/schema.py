@@ -73,8 +73,9 @@ class ProfilePicUploadMutation(graphene.Mutation):
 
     profile = graphene.Field(ProfileType)
 
+    @classmethod
     @login_required
-    def mutate(self, info, image, **kwargs):
+    def mutate(cls, self, info, image, **kwargs):
         print('here')
         print(info.context.user)
         profile = info.context.user.profile
