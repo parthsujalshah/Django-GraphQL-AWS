@@ -17,12 +17,17 @@ class UserType(DjangoObjectType):
 class Query(graphene.ObjectType):
 
     user_details = graphene.Field(UserType)
+    all_users = graphene.List(UserType)
 
     def resolve_user_details(root, info, **kwargs):
         user = info.context.user
         if not user.is_authenticated:
             raise Exception("Unauthenticated")
         return User.objects.get(username=user)
+
+    def resolve_all_users(root, info):
+        # temp route
+        return User.objects.all()
 
 
 class AuthMutation(graphene.ObjectType):
