@@ -6,8 +6,8 @@ import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import CreateUpdatePost from "./pages/CreateUpdatePost";
 import ReadPost from "./pages/ReadPost";
-import LoggedInMenu from "./containers/LoggedInMenu";
-import LoggedOutMenu from "./containers/LoggedOutMenu";
+import LoggedInMenu from "./menus/LoggedInMenu";
+import LoggedOutMenu from "./menus/LoggedOutMenu";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 function App() {
