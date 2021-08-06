@@ -23,7 +23,7 @@ const LoggedInMenu = props => {
             </Menu.Item>
             <Menu.Item onClick={() => {
                 localStorage.removeItem('authToken');
-                console.log('here');
+                history.push('/');
             }} key="logout">
                 Logout
             </Menu.Item>

@@ -12,23 +12,23 @@ function App() {
 
   return (
     <div>
-      {
-        !localStorage.getItem('authToken')
-          ?
-          <LoggedInMenu />
-          :
-          <LoggedOutMenu />
-      }
-      <div style={{ alignItems: "center", justifyContent: "center", display: "flex", flex: 1 }}>
-        <BrowserRouter>
+      <BrowserRouter>
+        {
+          !localStorage.getItem('authToken')
+            ?
+            <LoggedInMenu />
+            :
+            <LoggedOutMenu />
+        }
+        <div style={{ alignItems: "center", justifyContent: "center", display: "flex", flex: 1 }}>
           <Switch>
             <Route path="/" exact component={Home} />
             <Route path="/login" exact component={Login} />
             <Route path="/profile" exact component={Profile} />
             <Route path="/register" exact component={Register} />
           </Switch>
-        </BrowserRouter>
-      </div>
+        </div>
+      </BrowserRouter>
     </div>
   );
 }
