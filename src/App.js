@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import CreateUpdatePost from "./pages/CreateUpdatePost";
+import ReadPost from "./pages/ReadPost";
 import LoggedInMenu from "./containers/LoggedInMenu";
 import LoggedOutMenu from "./containers/LoggedOutMenu";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
@@ -29,6 +30,7 @@ function App() {
             <Route path="/register" exact component={Register} />
             <Route path="/create-post" exact component={() => <CreateUpdatePost createMode={"yes"} />} />
             <Route exact path="/update-post/:postId" component={CreateUpdatePost} />
+            <Route exact path="/read-post/:postId" component={ReadPost} />
           </Switch>
         </div>
       </BrowserRouter>
