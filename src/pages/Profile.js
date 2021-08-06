@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Upload, Avatar, Card, Affix } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { toUpper } from "lodash";
-import {useHistory} from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 
 const Profile = props => {
@@ -21,7 +21,7 @@ const Profile = props => {
     const [profilePic, setProfilePic] = useState({
         image: "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
     })
-    const [editableProfile, setEditableProfile] = useState(false);
+    const [editableProfile, setEditableProfile] = useState(true);
     const [posts, setPosts] = useState([
         {
             author: {
@@ -136,6 +136,13 @@ const Profile = props => {
                     >
                         <p style={{ color: "#e0e0e0", fontSize: 11 }}>Posted On: {post.datePosted}</p>
                         <p>{post.description}</p>
+                        <br />
+                        <br />
+                        <div style={{ display: "flex", flexDirection: "row" }}>
+                            <Button type="dashed" size="small" onClick={() => { history.push('/update-post/1') }}>Update</Button>
+                            <div style={{ marginRight: 10 }} />
+                            <Button type="dashed" size="small" danger>Delete</Button>
+                        </div>
                     </Card>
                 ))}
             </div>
@@ -201,7 +208,7 @@ const Profile = props => {
                                         </Button>
                                     </Form.Item>
                                     :
-                                    <div/>
+                                    <div />
                             }
 
                         </Form>
