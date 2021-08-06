@@ -2,9 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Upload, Avatar, Card, Affix } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { toUpper } from "lodash";
+import {useHistory} from "react-router-dom";
 
 
 const Profile = props => {
+    const history = useHistory();
+    if (!localStorage.getItem('authToken')) {
+        history.push('/login');
+    }
     const [profile, setProfile] = useState({
         id: 1,
         username: "username",

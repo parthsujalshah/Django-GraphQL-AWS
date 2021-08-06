@@ -1,9 +1,12 @@
 import React from "react";
 import { Form, Input, Button, Checkbox, Card } from 'antd';
-import {useHistory} from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const Register = props => {
     const history = useHistory();
+    if (localStorage.getItem('authToken')) {
+        history.push('/');
+    }
 
     const onFinish = (values) => {
         console.log('Success:', values);

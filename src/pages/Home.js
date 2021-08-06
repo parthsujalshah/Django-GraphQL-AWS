@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, Avatar, Row, Col } from 'antd';
 import { toUpper } from "lodash";
+import { useHistory } from "react-router-dom";
 
 const Home = props => {
     const [posts, setPosts] = useState([

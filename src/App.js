@@ -13,7 +13,7 @@ function App() {
   return (
     <div>
       {
-        localStorage.getItem('authToken')
+        !localStorage.getItem('authToken')
           ?
           <LoggedInMenu />
           :
