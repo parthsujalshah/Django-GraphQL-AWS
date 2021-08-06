@@ -71,6 +71,7 @@ const Home = props => {
                 {posts.map((post, index) => (
                     <Col span={10}>
                         <Card
+                            headStyle={{ backgroundColor: "#b5f5ec" }}
                             title={toUpper(post.title)}
                             extra={
                                 <div>
