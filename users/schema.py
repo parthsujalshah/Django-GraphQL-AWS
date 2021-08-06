@@ -67,14 +67,26 @@ class UpdateProfileMutation(graphene.Mutation):
 
 
 class ProfilePicUploadMutation(graphene.Mutation):
+    """
+    Graphiql does not have file support. However, file can be uploaded from postman:
+    1. Go to form data
+    2. Add "operations" key with value: { "query": "mutation ($<file field name>: Upload!) { <file upload mutation name>(<file field name>: $<file field name>){profile{firstname}} }", "variables": { "<file field name>": null } }
+        Sample Query: { "query": "mutation ($image: Upload!) { profilePicUpload(image: $image){profile{firstname}} }", "variables": { "image": null } }
+    3. Add "map" key with value: {"0": ["variables.image"]}
+    4. Add "0" key. The key type is "file" and in the value field choose the file of your choice
+    5. Make sure that you are authenticated (if required)
+    6. Make the request
+    """
+
     class Arguments:
         image = Upload(required=True)
         # image = graphene.String()
 
     profile = graphene.Field(ProfileType)
 
+    @classmethod
     @login_required
-    def mutate(self, info, image, **kwargs):
+    def mutate(cls, self, info, image, **kwargs):
         print('here')
         print(info.context.user)
         profile = info.context.user.profile
