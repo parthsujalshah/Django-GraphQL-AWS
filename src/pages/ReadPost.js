@@ -34,20 +34,6 @@ const ReadPost = props => {
         });
         console.log(detailedPostQueryResponse.data.detailedPost);
         setPost(detailedPostQueryResponse.data.detailedPost);
-        // const indPost = {
-        //     author: {
-        //         id: 1,
-        //         authorProfile: {
-        //             firstname: "Parth",
-        //             lastname: "Shah",
-        //             image: "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png",
-        //         },
-        //     },
-        //     title: "title",
-        //     content: "contentkregjerkgnero;gheo;ero;gne rjge gjer ;gkj iethj 4pjh[0 rtjitpjh 4jirth b[ortj hptjoh[ 5jtopji ",
-        //     datePosted: "12-03-2020"
-        // }
-        // setPost(indPost);
     }, []);
 
     return (
