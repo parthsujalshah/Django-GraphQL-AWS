@@ -26,8 +26,7 @@ class Query(graphene.ObjectType):
 
     user_details = graphene.Field(UserType)
     user_profile = graphene.Field(ProfileType)
-
-    all_users = graphene.List(UserType) #temp
+    author_profile = graphene.Field(ProfileType, id=graphene.Int(required=True))
 
     @login_required
     def resolve_user_details(root, info, **kwargs):
@@ -39,9 +38,9 @@ class Query(graphene.ObjectType):
         user = info.context.user
         return user.profile
 
-    # temp route
-    def resolve_all_users(root, info):
-        return User.objects.all()
+    def resolve_author_profile(root, info, id):
+        user = User.objects.get(id=id)
+        return user.profile
 
 
 class AuthMutation(graphene.ObjectType):
