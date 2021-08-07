@@ -18,7 +18,7 @@ const LoggedInMenu = props => {
             <Menu.Item key="newpost">
                 <h3><strong><a href={`${rootUrl}/create-post`}>New Post</a></strong></h3>
             </Menu.Item>
-            <Menu.Item style={{ marginLeft: "60%" }} key="profile">
+            <Menu.Item key="profile">
                 <a href={`${rootUrl}/profile/`}>Profile</a>
             </Menu.Item>
             <Menu.Item onClick={() => {

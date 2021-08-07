@@ -16,7 +16,7 @@ function App() {
     <div>
       <BrowserRouter>
         {
-          !localStorage.getItem('authToken')
+          localStorage.getItem('authToken')
             ?
             <LoggedInMenu />
             :

@@ -12,7 +12,7 @@ const LoggedInMenu = props => {
             <Menu.Item key="home2">
                 <h3><strong><a href={`${rootUrl}/`}>Home</a></strong></h3>
             </Menu.Item>
-            <Menu.Item style={{ marginLeft: 1000 }} key="profile">
+            <Menu.Item key="profile">
             <a href={`${rootUrl}/login/`}>Login</a>
             </Menu.Item>
             <Menu.Item key="logout">
