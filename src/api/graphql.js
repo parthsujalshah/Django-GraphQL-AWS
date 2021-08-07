@@ -1,9 +1,8 @@
 import { gql } from "@apollo/client";
 
-
 export const registrationMutation = gql`
-mutation{
-    register($email: String! $username: String! $password1: String! $password2: String!) {
+mutation($email: String! $username: String! $password1: String! $password2: String!){
+    register(email: $email username: $username password1: $password1 password2: $password2) {
         token
         refreshToken
         success
@@ -13,8 +12,8 @@ mutation{
 `;
 
 export const loginMutation = gql`
-mutation{
-    tokenAuth($username: String! $password: String!){
+mutation($username: String! $password: String!){
+    tokenAuth(username: $username password: $password){
         token
         success
         errors
@@ -35,6 +34,7 @@ query{
             profile{
                 firstname
                 lastname
+                image
             }
         }
     }
@@ -42,8 +42,8 @@ query{
 `;
 
 export const authorPostsQuery = gql`
-query{
-    authorPosts($id: Int!){
+query($id: Int!){
+    authorPosts(id: $id){
         id
         title
         description
@@ -53,36 +53,33 @@ query{
 `;
 
 export const detailedPostQuery = gql`
-query{
-    detailedPost($id: Int!){
+query($id: Int!){
+    detailedPost(id: $id){
         id
         title
+        description
         content
+        datePosted
         author{
-            firstName
-            lastName
+            profile{
+                image
+                firstname
+                lastname
+            }
         }
     }
 }
 `;
 
 export const authorProfileQuery = gql`
-query{
-    authorProfile($id: Int!){
+query($id: Int!){
+    authorProfile(id: $id){
         firstname
         lastname
         image
-    }
-}
-`;
-
-export const authorPostsQuery = gql`
-query{
-    authorPosts($id: Int!){
-        id
-        title
-        description
-        datePosted
+        user {
+            username
+        }
     }
 }
 `;

@@ -3,6 +3,10 @@ import { Form, Input, Button, Upload, Avatar, Card, Affix } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { toUpper } from "lodash";
 import { useHistory } from "react-router-dom";
+import LoggedInMenu from "../menus/LoggedInMenu";
+import LoggedOutMenu from "../menus/LoggedOutMenu";
+import { authorPostsQuery, authorProfileQuery } from "../api/graphql";
+import newApolloClient from "../api/apollo-client";
 
 
 const Profile = props => {
@@ -10,90 +14,39 @@ const Profile = props => {
     if (!localStorage.getItem('authToken')) {
         history.push('/login');
     }
-    const [profile, setProfile] = useState({
-        id: 1,
-        username: "username",
-        profile: {
-            firstname: "first name",
-            lastname: "last name",
+
+    const [editableProfile, setEditableProfile] = useState(false);
+    const [authorPosts, setAuthorPosts] = useState([{
+        title: "title",
+        description: "description",
+        datePosted: "12-03-2020"
+    }
+    ]);
+    const [authorProfile, setAuthorProfile] = useState({
+        firstname: "Parth",
+        lastname: "Shah",
+        image: "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png",
+        user: {
+            username: ""
         }
     });
-    const [profilePic, setProfilePic] = useState({
-        image: "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-    })
-    const [editableProfile, setEditableProfile] = useState(true);
-    const [posts, setPosts] = useState([
-        {
-            author: {
-                id: 1,
-                authorProfile: {
-                    firstname: "parth",
-                    lastname: "shah",
-                    image: "#",
-                },
-            },
-            title: "title",
-            description: "description",
-            datePosted: "12-03-2020"
-        }
-    ]);
 
-    useEffect(() => {
-        const profileInfo = {
-            id: 1,
-            username: "temp",
-            profile: {
-                firstname: "Parth",
-                lastname: "Shah",
+    useEffect(async () => {
+        const client = newApolloClient();
+        const authorPostsQueryResponse = await client.mutate({
+            mutation: authorPostsQuery,
+            variables: {
+                id: props.match.params.profileId,
             }
-        };
-        const profilImage = {
-            image: "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-        }
-        const postList = [
-            {
-                author: {
-                    id: 1,
-                    authorProfile: {
-                        firstname: "Parth",
-                        lastname: "Shah",
-                        image: "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png",
-                    },
-                },
-                title: "title",
-                description: "description",
-                datePosted: "12-03-2020"
-            },
-            {
-                author: {
-                    id: 1,
-                    authorProfile: {
-                        firstname: "Parth",
-                        lastname: "Shah",
-                        image: "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png",
-                    },
-                },
-                title: "title",
-                description: "description",
-                datePosted: "12-03-2020"
-            },
-            {
-                author: {
-                    id: 1,
-                    authorProfile: {
-                        firstname: "Parth",
-                        lastname: "Shah",
-                        image: "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png",
-                    },
-                },
-                title: "title",
-                description: "description",
-                datePosted: "12-03-2020"
-            },
-        ];
-        setProfile(profileInfo);
-        setProfilePic(profilImage);
-        setPosts(postList);
+        });
+        const authorProfileQueryResponse = await client.mutate({
+            mutation: authorProfileQuery,
+            variables: {
+                id: props.match.params.profileId
+            }
+        });
+        setAuthorProfile(authorProfileQueryResponse.data.authorProfile);
+        setAuthorPosts(authorPostsQueryResponse.data.authorPosts);
     }, []);
 
     const onFinish = (values) => {
@@ -117,103 +70,115 @@ const Profile = props => {
     };
 
     return (
-        <div style={{ display: "flex", flexDirection: "row" }}>
-            <div styles={{ display: "flex", flexDirection: "column" }}>
-                {posts.map((post, index) => (
-                    <Card
-                        headStyle={{ backgroundColor: "#b5f5ec" }}
-                        title={toUpper(post.title)}
-                        extra={
-                            <div>
-                                <div style={{ display: "flex", flexDirection: "row" }}>
-                                    <Avatar size="small" src={post.author.authorProfile.image} />
-                                    <div style={{ width: 10 }} />
-                                    <a href="#">{post.author.authorProfile.firstname} {post.author.authorProfile.lastname}</a>
+        <div style={{ width: "100%" }}>
+            {
+                localStorage.getItem('authToken') !== undefined && localStorage.getItem('authToken') !== null && localStorage.getItem('authToken') !== ""
+                    ?
+                    <LoggedInMenu />
+                    :
+                    <LoggedOutMenu />
+            }
+            <div style={{ display: "flex", flexDirection: "row", paddingLeft: 200, marginTop: 50 }}>
+                <div styles={{ display: "flex", flexDirection: "column" }}>
+                    {authorPosts.map((post, index) => (
+                        <Card
+                            style={{ marginTop: 40 }}
+                            headStyle={{ backgroundColor: "#b5f5ec" }}
+                            title={toUpper(post.title)}
+                            extra={
+                                <div>
+                                    <div style={{ display: "flex", flexDirection: "row" }}>
+                                        <Avatar size="small" src={authorProfile.image} />
+                                        <div style={{ width: 10 }} />
+                                        <a href="#">{authorProfile.firstname} {authorProfile.lastname}</a>
+                                    </div>
                                 </div>
-                            </div>
-                        }
-                        style={{ width: 400, marginTop: 20 }}
-                    >
-                        <p style={{ color: "#e0e0e0", fontSize: 11 }}>Posted On: {post.datePosted}</p>
-                        <p>{post.description}</p>
-                        <br />
-                        <br />
-                        <div style={{ display: "flex", flexDirection: "row" }}>
-                            <Button type="dashed" size="small" onClick={() => { history.push('/update-post/1') }}>Update</Button>
-                            <div style={{ marginRight: 10 }} />
-                            <Button type="dashed" size="small" danger>Delete</Button>
-                        </div>
-                    </Card>
-                ))}
-            </div>
-            <div style={{ marginRight: 100 }} />
-            <div>
-                <Affix>
-                    <Card style={{ width: 400, backgroundColor: "#f5f5f5", marginTop: 20 }}>
-                        <div style={{ display: "flex", flexDirection: "row" }}>
-                            <Avatar size={60} src={profilePic.image} />
-                            <div style={{ marginRight: 20 }} />
-                            <h1>{profile.username}</h1>
-                        </div>
-                        {
-                            editableProfile ?
-                                <Form
-                                    name="image"
-                                    onFinish={onFinishImage}
-                                    initialValues={{}}
-                                >
-                                    <Form.Item
-                                        name="changeProfilePic"
-                                        label="Change Profile Pcture"
-                                        valuePropName="fileList"
-                                        getValueFromEvent={normFile}
-                                    >
-                                        <Upload name="logo" action="/upload.do" listType="picture">
-                                            <Button icon={<UploadOutlined />}>Click to upload</Button>
-                                        </Upload>
-                                    </Form.Item>
-                                </Form>
-                                :
-                                <div style={{ marginBottom: 10 }} />
-                        }
-
-                        <Form
-                            name="basic"
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 16 }}
-                            initialValues={{ remember: true }}
-                            onFinish={onFinish}
-                            onFinishFailed={onFinishFailed}
+                            }
+                            style={{ width: 400, marginTop: 20 }}
                         >
-                            <Form.Item
-                                label="First Name"
-                                name="firstname"
-                            >
-                                <Input defaultValue={profile.profile.firstname} disabled={!editableProfile} />
-                            </Form.Item>
-
-                            <Form.Item
-                                label="Last Name"
-                                name="lastname"
-                            >
-                                <Input defaultValue={profile.profile.lastname} disabled={!editableProfile} />
-                            </Form.Item>
-
+                            <p style={{ color: "#e0e0e0", fontSize: 11 }}>Posted On: {post.datePosted}</p>
+                            <p>{post.description}</p>
+                            <br />
+                            <br />
+                            <div style={{ display: "flex", flexDirection: "row" }}>
+                                <Button type="dashed" size="small" onClick={() => { history.push('/update-post/1') }}>Update</Button>
+                                <div style={{ marginRight: 10 }} />
+                                <Button type="dashed" size="small" danger>Delete</Button>
+                            </div>
+                        </Card>
+                    ))}
+                </div>
+                <div style={{ marginRight: 400 }} />
+                <div>
+                    <Affix>
+                        <Card style={{ width: 400, backgroundColor: "#f5f5f5", marginTop: 20 }}>
+                            <div style={{ display: "flex", flexDirection: "row" }}>
+                                <Avatar size={60} src={authorProfile.image} />
+                                <div style={{ marginRight: 20 }} />
+                                <h1>{authorProfile.user.username}</h1>
+                            </div>
                             {
-                                editableProfile
-                                    ?
-                                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                                        <Button type="primary" htmlType="submit">
-                                            Update
-                                        </Button>
-                                    </Form.Item>
+                                editableProfile ?
+                                    <Form
+                                        name="image"
+                                        onFinish={onFinishImage}
+                                        initialValues={{}}
+                                    >
+                                        <Form.Item
+                                            name="changeProfilePic"
+                                            label="Change Profile Pcture"
+                                            valuePropName="fileList"
+                                            getValueFromEvent={normFile}
+                                        >
+                                            <Upload name="logo" action="/upload.do" listType="picture">
+                                                <Button icon={<UploadOutlined />}>Click to upload</Button>
+                                            </Upload>
+                                        </Form.Item>
+                                    </Form>
                                     :
-                                    <div />
+                                    <div style={{ marginBottom: 10 }} />
                             }
 
-                        </Form>
-                    </Card>
-                </Affix>
+                            <Form
+                                name="basic"
+                                labelCol={{ span: 8 }}
+                                wrapperCol={{ span: 16 }}
+                                initialValues={{ remember: true }}
+                                onFinish={onFinish}
+                                onFinishFailed={onFinishFailed}
+                            >
+                                <Form.Item
+                                    label="First Name"
+                                    name="firstname"
+                                >
+                                    <h3>{authorProfile.firstname}</h3>
+                                    {/* <Input defaultValue={authorProfile.firstname} disabled={!editableProfile} /> */}
+                                </Form.Item>
+
+                                <Form.Item
+                                    label="Last Name"
+                                    name="lastname"
+                                >
+                                    <h3>{authorProfile.lastname}</h3>
+                                    {/* <Input defaultValue={authorProfile.lastname} disabled={!editableProfile} /> */}
+                                </Form.Item>
+
+                                {
+                                    editableProfile
+                                        ?
+                                        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                                            <Button type="primary" htmlType="submit">
+                                                Update
+                                            </Button>
+                                        </Form.Item>
+                                        :
+                                        <div />
+                                }
+
+                            </Form>
+                        </Card>
+                    </Affix>
+                </div>
             </div>
         </div>
     );

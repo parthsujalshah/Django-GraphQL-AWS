@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Card } from 'antd';
 import { useHistory } from "react-router-dom";
+import LoggedInMenu from "../menus/LoggedInMenu";
+import LoggedOutMenu from "../menus/LoggedOutMenu";
 
 
 const CreateUpdatePost = props => {
@@ -39,6 +41,13 @@ const CreateUpdatePost = props => {
     };
     return (
         <div>
+            {
+                localStorage.getItem('authToken') !== undefined && localStorage.getItem('authToken') !== null && localStorage.getItem('authToken') !== ""
+                    ?
+                    <LoggedInMenu />
+                    :
+                    <LoggedOutMenu />
+            }
             <br />
             <br />
             <br />

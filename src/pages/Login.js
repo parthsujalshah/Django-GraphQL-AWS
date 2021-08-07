@@ -1,6 +1,9 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { Form, Input, Button, Checkbox, Card } from 'antd';
+import LoggedOutMenu from "../menus/LoggedOutMenu";
+import { loginMutation } from "../api/graphql";
+import newApolloClient from "../api/apollo-client";
 
 const Login = props => {
     const history = useHistory();
@@ -9,9 +12,19 @@ const Login = props => {
         history.push('/');
     }
 
-    const onFinish = (values) => {
+    const onFinish = async (values) => {
         console.log('Success:', values);
-        // history.push('/');
+        const client = newApolloClient();
+
+        const loginResponse = await client.mutate({
+            mutation: loginMutation,
+            variables: {
+                username: values.username,
+                password: values.password,
+            }
+        });
+        localStorage.setItem('authToken', loginResponse.data.tokenAuth.token);
+        history.push('/');
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -19,7 +32,8 @@ const Login = props => {
     };
 
     return (
-        <div>
+        <div style={{ width: window.innerWidth }}>
+            <LoggedOutMenu />
             <br />
             <br />
             <br />
