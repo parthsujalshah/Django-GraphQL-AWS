@@ -51,7 +51,7 @@ const ReadPost = props => {
     }, []);
 
     return (
-        <div>
+        <div style={{ width: "100%", alignItems: "center", justifyContent: "center" }}>
             {
                 localStorage.getItem('authToken') !== undefined && localStorage.getItem('authToken') !== null && localStorage.getItem('authToken') !== ""
                     ?
@@ -59,24 +59,26 @@ const ReadPost = props => {
                     :
                     <LoggedOutMenu />
             }
-            <Card
-                style={{ width: 1000 }}
-                headStyle={{ backgroundColor: "#b5f5ec" }}
-                title={toUpper(post.title)}
-                extra={
-                    <div>
-                        <div style={{ display: "flex", flexDirection: "row" }}>
-                            <Avatar size="small" src={post.author.profile.image} />
-                            <div style={{ width: 10 }} />
-                            <a href="#">{post.author.profile.firstname} {post.author.profile.lastname}</a>
+            <div style={{display: "flex", alignItems: "center", justifyContent: "center", marginTop: 50}}>
+                <Card
+                    style={{ width: 1000 }}
+                    headStyle={{ backgroundColor: "#b5f5ec" }}
+                    title={toUpper(post.title)}
+                    extra={
+                        <div>
+                            <div style={{ display: "flex", flexDirection: "row" }}>
+                                <Avatar size="small" src={post.author.profile.image} />
+                                <div style={{ width: 10 }} />
+                                <a href="#">{post.author.profile.firstname} {post.author.profile.lastname}</a>
+                            </div>
                         </div>
-                    </div>
-                }
-                style={{ width: 400, marginTop: 20 }}
-            >
-                <p style={{ color: "#e0e0e0", fontSize: 11 }}>Posted On: {post.datePosted}</p>
-                <p>{post.content}</p>
-            </Card>
+                    }
+                    style={{ width: 400, marginTop: 20 }}
+                >
+                    <p style={{ color: "#e0e0e0", fontSize: 11 }}>Posted On: {post.datePosted}</p>
+                    <p>{post.content}</p>
+                </Card>
+            </div>
         </div>
     );
 };
