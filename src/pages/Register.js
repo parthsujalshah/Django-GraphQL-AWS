@@ -7,7 +7,7 @@ import LoggedOutMenu from "../menus/LoggedOutMenu";
 
 const Register = props => {
     const history = useHistory();
-    if (localStorage.getItem('authToken')) {
+    if (localStorage.getItem('token')) {
         history.push('/');
     }
 
@@ -31,7 +31,7 @@ const Register = props => {
                 password2: values.confirm,
             }
         });
-        localStorage.setItem('authToken', regResponse.data.register.token);
+        localStorage.setItem('token', JSON.stringify(regResponse.data.register.token));
         history.push('/');
     };
 

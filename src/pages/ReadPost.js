@@ -39,7 +39,7 @@ const ReadPost = props => {
     return (
         <div style={{ width: "100%", alignItems: "center", justifyContent: "center" }}>
             {
-                localStorage.getItem('authToken') !== undefined && localStorage.getItem('authToken') !== null && localStorage.getItem('authToken') !== ""
+                localStorage.getItem('token') !== undefined && localStorage.getItem('token') !== null && localStorage.getItem('token') !== ""
                     ?
                     <LoggedInMenu />
                     :

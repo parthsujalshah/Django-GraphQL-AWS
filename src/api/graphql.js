@@ -83,3 +83,17 @@ query($id: Int!){
     }
 }
 `;
+
+export const userProfileQuery = gql`
+query{
+    userProfile {
+        id
+        user{
+            username
+        }
+        image
+        firstname
+        lastname
+    }
+}
+`;

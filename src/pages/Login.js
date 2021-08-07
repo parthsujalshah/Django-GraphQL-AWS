@@ -8,7 +8,7 @@ import newApolloClient from "../api/apollo-client";
 const Login = props => {
     const history = useHistory();
 
-    if (localStorage.getItem('authToken')) {
+    if (localStorage.getItem('token')) {
         history.push('/');
     }
 
@@ -23,7 +23,7 @@ const Login = props => {
                 password: values.password,
             }
         });
-        localStorage.setItem('authToken', loginResponse.data.tokenAuth.token);
+        localStorage.setItem('token', JSON.stringify(loginResponse.data.tokenAuth.token));
         history.push('/');
     };
 

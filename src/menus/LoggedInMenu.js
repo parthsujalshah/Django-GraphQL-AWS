@@ -22,7 +22,7 @@ const LoggedInMenu = props => {
                 <a href={`${rootUrl}/profile/`}>Profile</a>
             </Menu.Item>
             <Menu.Item onClick={() => {
-                localStorage.removeItem('authToken');
+                localStorage.removeItem('token');
                 history.push('/');
             }} key="logout">
                 Logout
