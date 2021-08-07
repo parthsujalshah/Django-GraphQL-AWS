@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Avatar, Row, Col } from 'antd';
+import { Card, Avatar, Row, Col, Button } from 'antd';
 import { toUpper } from "lodash";
 import { useHistory } from "react-router-dom";
 import LoggedInMenu from "../menus/LoggedInMenu";
@@ -10,6 +10,7 @@ import { rootUrl, urls } from "../api/urls";
 
 
 const Home = props => {
+    const history = useHistory();
     const [posts, setPosts] = useState([
         {
             author: {
@@ -27,47 +28,6 @@ const Home = props => {
     ]);
 
     useEffect(async () => {
-        // const postList = [
-        //     {
-        //         author: {
-        //             id: 1,
-        //             profile: {
-        //                 firstname: "Parth",
-        //                 lastname: "Shah",
-        //                 image: "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png",
-        //             },
-        //         },
-        //         title: "title",
-        //         description: "description",
-        //         datePosted: "12-03-2020"
-        //     },
-        //     {
-        //         author: {
-        //             id: 1,
-        //             profile: {
-        //                 firstname: "Parth",
-        //                 lastname: "Shah",
-        //                 image: "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png",
-        //             },
-        //         },
-        //         title: "title",
-        //         description: "description",
-        //         datePosted: "12-03-2020"
-        //     },
-        //     {
-        //         author: {
-        //             id: 1,
-        //             profile: {
-        //                 firstname: "Parth",
-        //                 lastname: "Shah",
-        //                 image: "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png",
-        //             },
-        //         },
-        //         title: "title",
-        //         description: "description",
-        //         datePosted: "12-03-2020"
-        //     },
-        // ];
         const client = newApolloClient();
         const postList = await client.query({
             query: allPostsQuery
@@ -103,6 +63,9 @@ const Home = props => {
                         >
                             <p style={{ color: "#e0e0e0", fontSize: 11 }}>Posted On: {post.datePosted}</p>
                             <p>{post.description}</p>
+                            <Button onClick={() => {
+                                history.push(`/read-post/${post.id}`);
+                            }}>Read full Article</Button>
                         </Card>
                     </Col>
                 ))}

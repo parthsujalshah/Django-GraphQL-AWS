@@ -105,6 +105,9 @@ const Profile = props => {
                                 <div style={{ marginRight: 10 }} />
                                 <Button type="dashed" size="small" danger>Delete</Button>
                             </div>
+                            <Button onClick={() => {
+                                history.push(`/read-post/${post.id}`);
+                            }}>Read full Article</Button>
                         </Card>
                     ))}
                 </div>
