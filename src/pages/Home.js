@@ -4,7 +4,7 @@ import { toUpper } from "lodash";
 import { useHistory } from "react-router-dom";
 import LoggedInMenu from "../menus/LoggedInMenu";
 import LoggedOutMenu from "../menus/LoggedOutMenu";
-import { allPostsQuery } from "../api/graphql";
+import { allPostsQuery, userProfileQuery } from "../api/graphql";
 import newApolloClient from "../api/apollo-client";
 import { rootUrl, urls } from "../api/urls";
 
@@ -63,8 +63,13 @@ const Home = props => {
                         >
                             <p style={{ color: "#e0e0e0", fontSize: 11 }}>Posted On: {post.datePosted}</p>
                             <p>{post.description}</p>
-                            <Button onClick={() => {
-                                history.push(`/read-post/${post.id}`);
+                            <Button onClick={async () => {
+                                const client = newApolloClient();
+                                const temp = await client.query({
+                                    query: userProfileQuery
+                                });
+                                console.log(temp);
+                                // history.push(`/read-post/${post.id}`);
                             }}>Read full Article</Button>
                         </Card>
                     </Col>
