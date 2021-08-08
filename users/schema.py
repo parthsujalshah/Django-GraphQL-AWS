@@ -27,6 +27,7 @@ class Query(graphene.ObjectType):
     user_details = graphene.Field(UserType)
     user_profile = graphene.Field(ProfileType)
     author_profile = graphene.Field(ProfileType, id=graphene.Int(required=True))
+    author_id = graphene.Int()
 
     @login_required
     def resolve_user_details(root, info, **kwargs):
@@ -41,6 +42,10 @@ class Query(graphene.ObjectType):
     def resolve_author_profile(root, info, id):
         user = User.objects.get(id=id)
         return user.profile
+
+    @login_required
+    def resolve_author_id(root, info):
+        return info.context.user.id
 
 
 class AuthMutation(graphene.ObjectType):
