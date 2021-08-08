@@ -64,12 +64,7 @@ const Home = props => {
                             <p style={{ color: "#e0e0e0", fontSize: 11 }}>Posted On: {post.datePosted}</p>
                             <p>{post.description}</p>
                             <Button onClick={async () => {
-                                const client = newApolloClient();
-                                const temp = await client.query({
-                                    query: userProfileQuery
-                                });
-                                console.log(temp);
-                                // history.push(`/read-post/${post.id}`);
+                                history.push(`/read-post/${post.id}`);
                             }}>Read full Article</Button>
                         </Card>
                     </Col>
