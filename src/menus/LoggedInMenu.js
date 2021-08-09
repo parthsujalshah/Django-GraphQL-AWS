@@ -22,10 +22,14 @@ const LoggedInMenu = props => {
             </Menu.Item>
             <Menu.Item key="profile" onClick={async () => {
                 const client = newApolloClient();
-                const authorIdQueryResponse = await client.query({
-                    query: authorIdQuery
-                });
-                history.push(`/profile/${authorIdQueryResponse.data.authorId}`);
+                try {
+                    const authorIdQueryResponse = await client.query({
+                        query: authorIdQuery
+                    });
+                    history.push(`/profile/${authorIdQueryResponse.data.authorId}`);
+                } catch {
+                    history.push('/profile');
+                }
             }}>
                 Profile
             </Menu.Item>

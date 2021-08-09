@@ -16,15 +16,19 @@ const Login = props => {
         console.log('Success:', values);
         const client = newApolloClient();
 
-        const loginResponse = await client.mutate({
-            mutation: loginMutation,
-            variables: {
-                username: values.username,
-                password: values.password,
-            }
-        });
-        localStorage.setItem('token', JSON.stringify(loginResponse.data.tokenAuth.token));
-        history.push('/');
+        try {
+            const loginResponse = await client.mutate({
+                mutation: loginMutation,
+                variables: {
+                    username: values.username,
+                    password: values.password,
+                }
+            });
+            localStorage.setItem('token', JSON.stringify(loginResponse.data.tokenAuth.token));
+            history.push('/');
+        } catch {
+            history.push('/login');
+        }
     };
 
     const onFinishFailed = (errorInfo) => {

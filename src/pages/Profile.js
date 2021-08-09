@@ -33,43 +33,51 @@ const Profile = props => {
 
     useEffect(async () => {
         const client = newApolloClient();
-        const authorIdQueryResponse = await client.query({
-            query: authorIdQuery
-        });
-        setEditableProfile(parseInt(authorIdQueryResponse.data.authorId) === parseInt(props.match.params.profileId));
-        const authorPostsQueryResponse = await client.mutate({
-            mutation: authorPostsQuery,
-            variables: {
-                id: props.match.params.profileId,
-            }
-        });
-        const authorProfileQueryResponse = await client.mutate({
-            mutation: authorProfileQuery,
-            variables: {
-                id: props.match.params.profileId
-            }
-        });
-        setAuthorProfile(authorProfileQueryResponse.data.authorProfile);
-        setAuthorPosts(authorPostsQueryResponse.data.authorPosts);
+        try {
+            const authorIdQueryResponse = await client.query({
+                query: authorIdQuery
+            });
+            setEditableProfile(parseInt(authorIdQueryResponse.data.authorId) === parseInt(props.match.params.profileId));
+            const authorPostsQueryResponse = await client.mutate({
+                mutation: authorPostsQuery,
+                variables: {
+                    id: props.match.params.profileId,
+                }
+            });
+            const authorProfileQueryResponse = await client.mutate({
+                mutation: authorProfileQuery,
+                variables: {
+                    id: props.match.params.profileId
+                }
+            });
+            setAuthorProfile(authorProfileQueryResponse.data.authorProfile);
+            setAuthorPosts(authorPostsQueryResponse.data.authorPosts);
+        } catch {
+            history.push('/');
+        }
     }, []);
 
     const onFinish = async (values) => {
         console.log('Success:', values);
         const client = newApolloClient();
-        // console.log(values.firstname, values.lastname);
-        const updatedProfile = await client.mutate({
-            mutation: updateProfileMutation,
-            variables: {
-                firstname: values.firstname ? values.firstname : "",
-                lastname: values.lastname ? values.lastname : ""
-            }
-        });
-        setAuthorProfile({
-            firstname: updatedProfile.data.updateProfile.profile.firstname,
-            lastname: updatedProfile.data.updateProfile.profile.lastname,
-            image: authorProfile.image,
-            user: authorProfile.user
-        });
+        try {
+            // console.log(values.firstname, values.lastname);
+            const updatedProfile = await client.mutate({
+                mutation: updateProfileMutation,
+                variables: {
+                    firstname: values.firstname ? values.firstname : "",
+                    lastname: values.lastname ? values.lastname : ""
+                }
+            });
+            setAuthorProfile({
+                firstname: updatedProfile.data.updateProfile.profile.firstname,
+                lastname: updatedProfile.data.updateProfile.profile.lastname,
+                image: authorProfile.image,
+                user: authorProfile.user
+            });
+        } catch {
+            history.push('/');
+        }
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -145,18 +153,22 @@ const Profile = props => {
                                         </label>
                                         <br />
                                         <button onClick={async () => {
-                                            const imageClient = newApolloImageClient();
-                                            const uploadData = new FormData();
-                                            const updateProfilePicMutationResponse = await imageClient.mutate({
-                                                mutation: updateProfilePicMutation,
-                                                variables: {
-                                                    image: profilePicImage
-                                                }
-                                            });
-                                            setAuthorProfile({
-                                                ...authorProfile,
-                                                image: `http://127.0.0.1:8000/media/${updateProfilePicMutationResponse.data.profilePicUpload.profile.image}`
-                                            });
+                                            try {
+                                                const imageClient = newApolloImageClient();
+                                                const uploadData = new FormData();
+                                                const updateProfilePicMutationResponse = await imageClient.mutate({
+                                                    mutation: updateProfilePicMutation,
+                                                    variables: {
+                                                        image: profilePicImage
+                                                    }
+                                                });
+                                                setAuthorProfile({
+                                                    ...authorProfile,
+                                                    image: `http://127.0.0.1:8000/media/${updateProfilePicMutationResponse.data.profilePicUpload.profile.image}`
+                                                });
+                                            } catch {
+                                                history.push('/');
+                                            }
 
                                         }}>Upload</button>
                                     </div>
