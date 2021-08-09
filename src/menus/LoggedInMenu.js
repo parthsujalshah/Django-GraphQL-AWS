@@ -3,7 +3,7 @@ import React from "react";
 import { Menu } from 'antd';
 import { rootUrl } from "../api/urls";
 import { authorIdQuery } from "../api/graphql";
-import newApolloClient from "../api/apollo-client";
+import { newApolloClient } from "../api/apollo-client";
 
 const { SubMenu } = Menu;
 

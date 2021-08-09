@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import LoggedInMenu from "../menus/LoggedInMenu";
 import LoggedOutMenu from "../menus/LoggedOutMenu";
 import { allPostsQuery, userProfileQuery } from "../api/graphql";
-import newApolloClient from "../api/apollo-client";
+import { newApolloClient } from "../api/apollo-client";
 import { rootUrl, urls } from "../api/urls";
 
 

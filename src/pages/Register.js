@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Input, Button, Checkbox, Card } from 'antd';
 import { useHistory } from "react-router-dom";
-import newApolloClient from "../api/apollo-client";
+import { newApolloClient } from "../api/apollo-client";
 import { registrationMutation } from "../api/graphql";
 import LoggedOutMenu from "../menus/LoggedOutMenu";
 

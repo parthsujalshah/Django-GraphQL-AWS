@@ -115,3 +115,13 @@ mutation($firstname: String! $lastname: String!){
     }
 }
 `;
+
+export const updateProfilePicMutation = gql`
+mutation($image: Upload!){
+    profilePicUpload(image: $image){
+        profile{
+            image
+        }
+    }
+}
+`;

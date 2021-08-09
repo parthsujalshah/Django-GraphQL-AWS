@@ -4,7 +4,7 @@ import { toUpper } from "lodash";
 import LoggedInMenu from "../menus/LoggedInMenu";
 import LoggedOutMenu from "../menus/LoggedOutMenu";
 import { detailedPostQuery } from "../api/graphql";
-import newApolloClient from "../api/apollo-client";
+import { newApolloClient } from "../api/apollo-client";
 
 
 const ReadPost = props => {
@@ -45,7 +45,7 @@ const ReadPost = props => {
                     :
                     <LoggedOutMenu />
             }
-            <div style={{display: "flex", alignItems: "center", justifyContent: "center", marginTop: 50}}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: 50 }}>
                 <Card
                     style={{ width: 1000 }}
                     headStyle={{ backgroundColor: "#b5f5ec" }}

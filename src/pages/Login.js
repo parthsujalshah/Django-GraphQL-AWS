@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { Form, Input, Button, Checkbox, Card } from 'antd';
 import LoggedOutMenu from "../menus/LoggedOutMenu";
 import { loginMutation } from "../api/graphql";
-import newApolloClient from "../api/apollo-client";
+import { newApolloClient } from "../api/apollo-client";
 
 const Login = props => {
     const history = useHistory();

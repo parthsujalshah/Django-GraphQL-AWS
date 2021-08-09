@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Upload, Avatar, Card, Affix } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
 import { toUpper } from "lodash";
 import { useHistory } from "react-router-dom";
 import LoggedInMenu from "../menus/LoggedInMenu";
 import LoggedOutMenu from "../menus/LoggedOutMenu";
-import { authorPostsQuery, authorProfileQuery, authorIdQuery, updateProfileMutation } from "../api/graphql";
-import newApolloClient from "../api/apollo-client";
+import { authorPostsQuery, authorProfileQuery, authorIdQuery, updateProfileMutation, updateProfilePicMutation } from "../api/graphql";
+import { newApolloClient, newApolloImageClient } from "../api/apollo-client";
 
 
 const Profile = props => {
@@ -30,6 +29,7 @@ const Profile = props => {
             username: ""
         }
     });
+    const [profilePicImage, setProfilePicImage] = useState();
 
     useEffect(async () => {
         const client = newApolloClient();
@@ -72,20 +72,8 @@ const Profile = props => {
         });
     };
 
-    const onFinishImage = (values) => {
-        console.log('Success:', values);
-    };
-
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
-    };
-
-    const normFile = (e) => {
-        console.log('Upload event:', e);
-        if (Array.isArray(e)) {
-            return e;
-        }
-        return e && e.fileList;
     };
 
     return (
@@ -148,22 +136,30 @@ const Profile = props => {
                             </div>
                             {
                                 editableProfile ?
-                                    <Form
-                                        name="image"
-                                        onFinish={onFinishImage}
-                                        initialValues={{}}
-                                    >
-                                        <Form.Item
-                                            name="changeProfilePic"
-                                            label="Change Profile Pcture"
-                                            valuePropName="fileList"
-                                            getValueFromEvent={normFile}
-                                        >
-                                            <Upload name="logo" action="/upload.do" listType="picture">
-                                                <Button icon={<UploadOutlined />}>Click to upload</Button>
-                                            </Upload>
-                                        </Form.Item>
-                                    </Form>
+                                    <div>
+                                        <h3>Change Profile Picture</h3>
+                                        <label>
+                                            <input type="file" onChange={event => {
+                                                setProfilePicImage(event.target.files[0]);
+                                            }} />
+                                        </label>
+                                        <br />
+                                        <button onClick={async () => {
+                                            const imageClient = newApolloImageClient();
+                                            const uploadData = new FormData();
+                                            const updateProfilePicMutationResponse = await imageClient.mutate({
+                                                mutation: updateProfilePicMutation,
+                                                variables: {
+                                                    image: profilePicImage
+                                                }
+                                            });
+                                            setAuthorProfile({
+                                                ...authorProfile,
+                                                image: `http://127.0.0.1:8000/media/${updateProfilePicMutationResponse.data.profilePicUpload.profile.image}`
+                                            });
+
+                                        }}>Upload</button>
+                                    </div>
                                     :
                                     <div style={{ marginBottom: 10 }} />
                             }
