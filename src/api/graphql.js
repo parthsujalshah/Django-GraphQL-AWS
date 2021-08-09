@@ -97,3 +97,21 @@ query{
     }
 }
 `;
+
+export const authorIdQuery = gql`
+query{
+    authorId
+}
+`;
+
+export const updateProfileMutation = gql`
+mutation($firstname: String! $lastname: String!){
+    updateProfile(firstname: $firstname lastname: $lastname){
+        profile{
+            id
+            firstname
+            lastname
+        }
+    }
+}
+`;

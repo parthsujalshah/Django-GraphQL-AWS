@@ -11,12 +11,12 @@ const Register = props => {
         history.push('/');
     }
 
-    const validateMessages = {
-        required: '${label} is required!',
-        types: {
-            email: '${label} is not a valid email!',
-        }
-    };
+    // const validateMessages = {
+    //     required: '${label} is required!',
+    //     types: {
+    //         email: '${label} is not a valid email!',
+    //     }
+    // };
 
     const onFinish = async (values) => {
         console.log('Success:', values);

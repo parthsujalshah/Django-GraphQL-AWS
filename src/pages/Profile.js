@@ -5,7 +5,7 @@ import { toUpper } from "lodash";
 import { useHistory } from "react-router-dom";
 import LoggedInMenu from "../menus/LoggedInMenu";
 import LoggedOutMenu from "../menus/LoggedOutMenu";
-import { authorPostsQuery, authorProfileQuery } from "../api/graphql";
+import { authorPostsQuery, authorProfileQuery, authorIdQuery, updateProfileMutation } from "../api/graphql";
 import newApolloClient from "../api/apollo-client";
 
 
@@ -33,6 +33,10 @@ const Profile = props => {
 
     useEffect(async () => {
         const client = newApolloClient();
+        const authorIdQueryResponse = await client.query({
+            query: authorIdQuery
+        });
+        setEditableProfile(parseInt(authorIdQueryResponse.data.authorId) === parseInt(props.match.params.profileId));
         const authorPostsQueryResponse = await client.mutate({
             mutation: authorPostsQuery,
             variables: {
@@ -49,8 +53,23 @@ const Profile = props => {
         setAuthorPosts(authorPostsQueryResponse.data.authorPosts);
     }, []);
 
-    const onFinish = (values) => {
+    const onFinish = async (values) => {
         console.log('Success:', values);
+        const client = newApolloClient();
+        // console.log(values.firstname, values.lastname);
+        const updatedProfile = await client.mutate({
+            mutation: updateProfileMutation,
+            variables: {
+                firstname: values.firstname ? values.firstname : "",
+                lastname: values.lastname ? values.lastname : ""
+            }
+        });
+        setAuthorProfile({
+            firstname: updatedProfile.data.updateProfile.profile.firstname,
+            lastname: updatedProfile.data.updateProfile.profile.lastname,
+            image: authorProfile.image,
+            user: authorProfile.user
+        });
     };
 
     const onFinishImage = (values) => {
@@ -118,7 +137,14 @@ const Profile = props => {
                             <div style={{ display: "flex", flexDirection: "row" }}>
                                 <Avatar size={60} src={authorProfile.image} />
                                 <div style={{ marginRight: 20 }} />
-                                <h1>{authorProfile.user.username}</h1>
+                                <div>
+                                    <h1>{authorProfile.user.username}</h1>
+                                    <div style={{ display: "flex", flexDirection: "row" }}>
+                                        <h3>{authorProfile.firstname}</h3>
+                                        <div style={{ marginRight: 20 }} />
+                                        <h3>{authorProfile.lastname}</h3>
+                                    </div>
+                                </div>
                             </div>
                             {
                                 editableProfile ?
@@ -154,16 +180,26 @@ const Profile = props => {
                                     label="First Name"
                                     name="firstname"
                                 >
-                                    <h3>{authorProfile.firstname}</h3>
-                                    {/* <Input defaultValue={authorProfile.firstname} disabled={!editableProfile} /> */}
+                                    {
+                                        editableProfile
+                                            ?
+                                            <Input placeholder="change" />
+                                            :
+                                            <div />
+                                    }
                                 </Form.Item>
 
                                 <Form.Item
                                     label="Last Name"
                                     name="lastname"
                                 >
-                                    <h3>{authorProfile.lastname}</h3>
-                                    {/* <Input defaultValue={authorProfile.lastname} disabled={!editableProfile} /> */}
+                                    {
+                                        editableProfile
+                                            ?
+                                            <Input placeholder="change" />
+                                            :
+                                            <div />
+                                    }
                                 </Form.Item>
 
                                 {
