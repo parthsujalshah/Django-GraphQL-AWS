@@ -28,6 +28,7 @@ const LoggedInMenu = props => {
                     });
                     history.push(`/profile/${authorIdQueryResponse.data.authorId}`);
                 } catch {
+                    localStorage.removeItem('token');
                     history.push('/profile');
                 }
             }}>

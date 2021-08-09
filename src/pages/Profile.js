@@ -53,6 +53,7 @@ const Profile = props => {
             setAuthorProfile(authorProfileQueryResponse.data.authorProfile);
             setAuthorPosts(authorPostsQueryResponse.data.authorPosts);
         } catch {
+            localStorage.removeItem('token');
             history.push('/');
         }
     }, []);
@@ -76,6 +77,7 @@ const Profile = props => {
                 user: authorProfile.user
             });
         } catch {
+            localStorage.removeItem('token');
             history.push('/');
         }
     };
@@ -167,6 +169,7 @@ const Profile = props => {
                                                     image: `http://127.0.0.1:8000/media/${updateProfilePicMutationResponse.data.profilePicUpload.profile.image}`
                                                 });
                                             } catch {
+                                                localStorage.removeItem('token');
                                                 history.push('/');
                                             }
 

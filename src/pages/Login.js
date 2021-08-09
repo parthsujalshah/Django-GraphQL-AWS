@@ -27,6 +27,7 @@ const Login = props => {
             localStorage.setItem('token', JSON.stringify(loginResponse.data.tokenAuth.token));
             history.push('/');
         } catch {
+            localStorage.removeItem('token');
             history.push('/login');
         }
     };
