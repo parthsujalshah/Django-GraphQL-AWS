@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Card } from 'antd';
 import { useHistory } from "react-router-dom";
+import LoggedInMenu from "../menus/LoggedInMenu";
+import LoggedOutMenu from "../menus/LoggedOutMenu";
 
 
 const CreateUpdatePost = props => {
 
     const history = useHistory();
 
-    if (!localStorage.getItem('authToken')) {
+    if (!localStorage.getItem('token')) {
         history.push('/');
     }
 
@@ -39,6 +41,13 @@ const CreateUpdatePost = props => {
     };
     return (
         <div>
+            {
+                localStorage.getItem('token') !== undefined && localStorage.getItem('token') !== null && localStorage.getItem('token') !== ""
+                    ?
+                    <LoggedInMenu />
+                    :
+                    <LoggedOutMenu />
+            }
             <br />
             <br />
             <br />

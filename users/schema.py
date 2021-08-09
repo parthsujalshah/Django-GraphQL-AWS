@@ -26,8 +26,8 @@ class Query(graphene.ObjectType):
 
     user_details = graphene.Field(UserType)
     user_profile = graphene.Field(ProfileType)
-
-    all_users = graphene.List(UserType) #temp
+    author_profile = graphene.Field(ProfileType, id=graphene.Int(required=True))
+    author_id = graphene.Int()
 
     @login_required
     def resolve_user_details(root, info, **kwargs):
@@ -39,9 +39,13 @@ class Query(graphene.ObjectType):
         user = info.context.user
         return user.profile
 
-    # temp route
-    def resolve_all_users(root, info):
-        return User.objects.all()
+    def resolve_author_profile(root, info, id):
+        user = User.objects.get(id=id)
+        return user.profile
+
+    @login_required
+    def resolve_author_id(root, info):
+        return info.context.user.id
 
 
 class AuthMutation(graphene.ObjectType):
@@ -87,8 +91,6 @@ class ProfilePicUploadMutation(graphene.Mutation):
     @classmethod
     @login_required
     def mutate(cls, self, info, image, **kwargs):
-        print('here')
-        print(info.context.user)
         profile = info.context.user.profile
         profile.image = image
         profile.save()

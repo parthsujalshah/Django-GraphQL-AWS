@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Card, Avatar, Row, Col } from 'antd';
+import { Card, Avatar, Row, Col, Button } from 'antd';
 import { toUpper } from "lodash";
 import { useHistory } from "react-router-dom";
+import LoggedInMenu from "../menus/LoggedInMenu";
+import LoggedOutMenu from "../menus/LoggedOutMenu";
+import { allPostsQuery, userProfileQuery } from "../api/graphql";
+import { newApolloClient } from "../api/apollo-client";
+import { rootUrl, urls } from "../api/urls";
+
 
 const Home = props => {
+    const history = useHistory();
     const [posts, setPosts] = useState([
         {
             author: {
                 id: 1,
-                authorProfile: {
+                profile: {
                     firstname: "parth",
                     lastname: "shah",
                     image: "#",
@@ -20,54 +27,24 @@ const Home = props => {
         }
     ]);
 
-    useEffect(() => {
-        const postList = [
-            {
-                author: {
-                    id: 1,
-                    authorProfile: {
-                        firstname: "Parth",
-                        lastname: "Shah",
-                        image: "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png",
-                    },
-                },
-                title: "title",
-                description: "description",
-                datePosted: "12-03-2020"
-            },
-            {
-                author: {
-                    id: 1,
-                    authorProfile: {
-                        firstname: "Parth",
-                        lastname: "Shah",
-                        image: "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png",
-                    },
-                },
-                title: "title",
-                description: "description",
-                datePosted: "12-03-2020"
-            },
-            {
-                author: {
-                    id: 1,
-                    authorProfile: {
-                        firstname: "Parth",
-                        lastname: "Shah",
-                        image: "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png",
-                    },
-                },
-                title: "title",
-                description: "description",
-                datePosted: "12-03-2020"
-            },
-        ];
-        setPosts(postList);
+    useEffect(async () => {
+        const client = newApolloClient();
+        const postList = await client.query({
+            query: allPostsQuery
+        });
+        setPosts(postList.data.allPosts);
     }, []);
 
     return (
-        <div>
-            <Row>
+        <div style={{ width: window.innerWidth }}>
+            {
+                localStorage.getItem('token') !== undefined && localStorage.getItem('token') !== null && localStorage.getItem('token') !== ""
+                    ?
+                    <LoggedInMenu />
+                    :
+                    <LoggedOutMenu />
+            }
+            <Row style={{ marginLeft: 200, marginTop: 50 }}>
                 {posts.map((post, index) => (
                     <Col span={10}>
                         <Card
@@ -76,9 +53,9 @@ const Home = props => {
                             extra={
                                 <div>
                                     <div style={{ display: "flex", flexDirection: "row" }}>
-                                        <Avatar size="small" src={post.author.authorProfile.image} />
+                                        <Avatar size="medium" src={post.author.profile.image} />
                                         <div style={{ width: 10 }} />
-                                        <a href="#">{post.author.authorProfile.firstname} {post.author.authorProfile.lastname}</a>
+                                        <a href={`${rootUrl}/profile/${post.author.id}`}>{post.author.profile.firstname} {post.author.profile.lastname}</a>
                                     </div>
                                 </div>
                             }
@@ -86,6 +63,9 @@ const Home = props => {
                         >
                             <p style={{ color: "#e0e0e0", fontSize: 11 }}>Posted On: {post.datePosted}</p>
                             <p>{post.description}</p>
+                            <Button onClick={async () => {
+                                history.push(`/read-post/${post.id}`);
+                            }}>Read full Article</Button>
                         </Card>
                     </Col>
                 ))}

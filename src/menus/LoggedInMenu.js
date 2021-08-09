@@ -2,6 +2,8 @@ import { useHistory } from "react-router-dom";
 import React from "react";
 import { Menu } from 'antd';
 import { rootUrl } from "../api/urls";
+import { authorIdQuery } from "../api/graphql";
+import { newApolloClient } from "../api/apollo-client";
 
 const { SubMenu } = Menu;
 
@@ -18,11 +20,22 @@ const LoggedInMenu = props => {
             <Menu.Item key="newpost">
                 <h3><strong><a href={`${rootUrl}/create-post`}>New Post</a></strong></h3>
             </Menu.Item>
-            <Menu.Item style={{ marginLeft: "60%" }} key="profile">
-                <a href={`${rootUrl}/profile/`}>Profile</a>
+            <Menu.Item key="profile" onClick={async () => {
+                const client = newApolloClient();
+                try {
+                    const authorIdQueryResponse = await client.query({
+                        query: authorIdQuery
+                    });
+                    history.push(`/profile/${authorIdQueryResponse.data.authorId}`);
+                } catch {
+                    localStorage.removeItem('token');
+                    history.push('/profile');
+                }
+            }}>
+                Profile
             </Menu.Item>
             <Menu.Item onClick={() => {
-                localStorage.removeItem('authToken');
+                localStorage.removeItem('token');
                 history.push('/');
             }} key="logout">
                 Logout

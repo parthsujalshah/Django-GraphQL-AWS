@@ -1,15 +1,37 @@
 import React from "react";
 import { Form, Input, Button, Checkbox, Card } from 'antd';
 import { useHistory } from "react-router-dom";
+import { newApolloClient } from "../api/apollo-client";
+import { registrationMutation } from "../api/graphql";
+import LoggedOutMenu from "../menus/LoggedOutMenu";
 
 const Register = props => {
     const history = useHistory();
-    if (localStorage.getItem('authToken')) {
+    if (localStorage.getItem('token')) {
         history.push('/');
     }
 
-    const onFinish = (values) => {
+    // const validateMessages = {
+    //     required: '${label} is required!',
+    //     types: {
+    //         email: '${label} is not a valid email!',
+    //     }
+    // };
+
+    const onFinish = async (values) => {
         console.log('Success:', values);
+        const client = newApolloClient();
+
+        const regResponse = await client.mutate({
+            mutation: registrationMutation,
+            variables: {
+                username: values.username,
+                email: values.email,
+                password1: values.password,
+                password2: values.confirm,
+            }
+        });
+        localStorage.setItem('token', JSON.stringify(regResponse.data.register.token));
         history.push('/');
     };
 
@@ -18,7 +40,8 @@ const Register = props => {
     };
 
     return (
-        <div>
+        <div style={{ width: window.innerWidth }}>
+            <LoggedOutMenu />
             <br />
             <br />
             <br />
@@ -50,6 +73,10 @@ const Register = props => {
                             },
                         ]}
                     >
+                        <Input />
+                    </Form.Item>
+
+                    <Form.Item name={'email'} label="Email" rules={[{ type: 'email' }]}>
                         <Input />
                     </Form.Item>
 
